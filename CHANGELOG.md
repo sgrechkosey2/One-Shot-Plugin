@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Fixed
+- `hooks/block-bad-commands.sh`: the .env/credentials guard used the ungrouped
+  pattern `git\s+(add|commit).*\.env|credentials|secret`, so it refused any Bash
+  command containing "credentials" or "secret" (docs, heredocs, commit messages,
+  workflow files referencing `${{ secrets.X }}`) and missed `git -C <dir> add .env`.
+  The guard now tokenizes the command and refuses `git add` / `git commit` only
+  when a path argument names a `.env` file or a credentials/secret file;
+  commit-message options are ignored.
+
+### Added
+- `tests/test_block_bad_commands.py` — invocation-based tests (18 parametrized
+  cases plus regression cases) that run the hook with PreToolUse JSON on stdin.
+
+---
+
 ## [1.2.3] — 2026-06-02 — Marketplace sync initiated
 
 Plugin submitted to Claude Plugins Community (claude-plugins-community) and
